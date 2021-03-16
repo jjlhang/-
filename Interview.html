@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .picture {
+      display: inline-block;
+      position: relative;
+    }
+
+    .check {
+      position: absolute;
+      left: 0;
+      right: 0;
+
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"> </div>
+</body>
+<script src="./lib/react.development.js"></script>
+<script src="./lib/react-dom.development.js"></script>
+<script src="./lib/babel.min.js"></script>
+<script type="text/babel">
+  const { useState, useEffect } = React
+  const Page = () => {
+    const [value, setValue] = React.useState(['1']);
+    const pictures = [{
+      id: '1',
+      name: 'foo',
+      flag: false,
+      url: 'https://gw.alipayobjects.com/mdn/rms_d212b7/afts/img/A*LlfeSa8N0WgAAAAAAAAAAABkARQnAQ'
+    },
+    {
+      id: '2',
+      name: 'foo',
+      flag: false,
+      url: 'https://gw.alipayobjects.com/mdn/rms_d212b7/afts/img/A*LlfeSa8N0WgAAAAAAAAAAABkARQnAQ'
+    },
+    {
+      id: '3',
+      name: 'foo',
+      flag: false,
+      url: 'https://gw.alipayobjects.com/mdn/rms_d212b7/afts/img/A*LlfeSa8N0WgAAAAAAAAAAABkARQnAQ'
+    },
+    ]; // 同上面的数据
+
+    console.log(value);
+
+    return <PictureSelect pictures={pictures} value={value} onChange={(value) => setValue(value)} />
+  };
+
+  const PictureSelect = (props) => {
+    const [pictures, setpictures] = useState(props.pictures)
+    const [flag, setFlag] = useState(false)
+    const [value, setValule] = useState(props.value)
+    const changeFlag = (e) => {
+      var bool = e.target.checked
+      console.log(e, "e")
+      if (bool) {
+        setFlag(true)
+        pictures.forEach((item) => { item.flag = true })
+
+      } else {
+        setFlag(false)
+        pictures.forEach((item) => { item.flag = false })
+      }
+      setpictures(
+        props.pictures
+      )
+    }
+    const seleFlag = (e, i) => {
+      pictures[i.index].flag = e.target.checked
+      console.log(pictures)
+
+      setpictures([...pictures])
+      // props.pictures = JSON.parse(JSON.stringify(pictures))
+      var lool = pictures.filter(item => {
+        return !item.flag
+      })
+      console.log(lool, "lool")
+      console.log(lool.length, "length")
+      if (lool.length == 0) {
+        setFlag(true)
+      } else {
+        setFlag(false)
+      }
+
+    }
+    return (
+      <div>
+        <input type="checkbox" checked={flag ? true : false} onChange={(e) => changeFlag(e)} /><span>以选择中{}个文件</span>
+        <div></div>
+        {pictures.map((item, index) => <li key={item.id} className="picture" >
+          {item.fg}
+          <img src={item.url} />
+          <input type="checkbox" checked={item.flag} className="check" onChange={(e) => seleFlag(e, { index })} />
+        </li>)}
+
+      </div>
+    )
+  }
+
+
+  ReactDOM.render(
+    <Page />,
+    document.querySelector('#root')
+  )
+</script>
+
+</html>
